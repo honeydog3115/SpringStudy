@@ -1,0 +1,107 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.example'
+version = '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // ===== Spring Framework 3.1.2 =====
+    implementation "org.springframework:spring-context:3.1.2.RELEASE"
+    implementation "org.springframework:spring-beans:3.1.2.RELEASE"
+    implementation "org.springframework:spring-core:3.1.2.RELEASE"
+    implementation "org.springframework:spring-aop:3.1.2.RELEASE"
+    implementation "org.springframework:spring-tx:3.1.2.RELEASE"
+    implementation "org.springframework:spring-jdbc:3.1.2.RELEASE"
+    implementation "org.springframework:spring-expression:3.1.2.RELEASE"
+    implementation "org.springframework:spring-context-support:3.1.2.RELEASE"
+
+    // ===== JavaMail / Activation =====
+    implementation 'javax.mail:mail:1.4.7'
+    implementation 'javax.activation:activation:1.1.1'
+
+    // ===== JDBC =====
+    implementation 'mysql:mysql-connector-java:5.1.49' // 8.x 말고 5.x 권장
+
+    // ===== Logging =====
+    implementation 'org.slf4j:slf4j-api:1.7.36'
+    implementation 'ch.qos.logback:logback-classic:1.2.12'
+
+    // ===== Tests =====
+    testImplementation 'junit:junit:4.13.2'
+    testImplementation "org.springframework:spring-test:3.1.2.RELEASE"
+	testImplementation 'org.hamcrest:hamcrest:2.2'
+	testImplementation 'org.mockito:mockito-core:5.12.0'
+	testImplementation 'org.mockito:mockito-inline:5.2.0'
+	testImplementation "org.aspectj:aspectjtools:1.6.6"
+}
+
+test {
+    useJUnit()
+}
+
+
+// plugins {
+// 	id 'java'
+// 	id 'org.springframework.boot' version '3.4.4'
+// 	id 'io.spring.dependency-management' version '1.1.7'
+// }
+
+// group = 'com.example'
+// version = '0.0.1-SNAPSHOT'
+
+// java {
+// 	toolchain {
+// 		languageVersion = JavaLanguageVersion.of(17)
+// 	}
+// }
+
+// repositories {
+// 	mavenCentral()
+// }
+
+// dependencies {
+// 	implementation 'org.springframework.boot:spring-boot-starter'
+// 	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
+//     implementation 'mysql:mysql-connector-java:8.0.33'
+// 	implementation 'junit:junit:4.13.2'
+// 	implementation 'org.springframework.boot:spring-boot-starter-test'
+// 	implementation 'org.springframework:spring-context-support:6.2.9'
+// 	// javax.activation
+// 	implementation 'javax.activation:activation:1.1.1'
+
+// 	// javax.mail
+// 	implementation 'javax.mail:mail:1.4.7'
+
+// 	implementation 'aopalliance:aopalliance:1.0'
+// 	implementation "org.springframework:spring-aop:3.0.7.RELEASE"
+
+//     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+//     testImplementation 'junit:junit:4.13.2'
+// 	// testImplementation 'javax.activation:com.springsource.javax.activation:1.1.0'
+// 	// testImplementation 'javax.mail:com.springsource.javax.mail:1.4.0'
+// 	// testImplementation 'org.springframework:spring-context-support:6.2.9'
+    
+	
+
+// 	// implementation 'org.springframework.boot:spring-boot-starter'
+// 	// implementation 'org.springframework.boot:spring-boot-starter-test'
+// 	// // implementation("org.junit.jupiter:junit-jupiter")
+// 	// // implementation 'org.junit.platform:junit-platform-launcher'
+// 	// implementation("junit:junit:4.13.2")
+// 	// // testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+// 	// implementation 'mysql:mysql-connector-java:8.0.33'
+// 	// implementation("org.springframework:spring-jdbc:3.0.7.RELEASE")
+// }
+
+// tasks.named('test') {
+// 	useJUnitPlatform()
+// }
+
