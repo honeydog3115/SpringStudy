@@ -2,8 +2,14 @@
 <beans xmlns="http://www.springframework.org/schema/beans"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
     xsi:schemaLocation="
-        http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans.xsd 
+        http://www.springframework.org/schema/aop 
+        http://www.springframework.org/schema/aop/spring-aop.xsd
+        http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
     <!-- <bean id="connectionMaker" class="com.example.springbook.user.dao.DConnectionMaker"/> -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
@@ -11,10 +17,6 @@
         <property name="username" value="spring" />
         <property name="password" value="book" />
     </bean>
-
-    <!-- <bean id="userLevelUpgradePolicy" class="com.example.springbook.user.service.UserLevelUpgradePolicyBase">
-        <property name="userDao" ref="userDao"/>
-    </bean> -->
 
     <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
         <property name="dataSource" ref="dataSource"/>
@@ -37,17 +39,35 @@
     <!-- 스태틱 멤버 클래스는 $로 지정을 해주고 다른 빈의 프로퍼티 정의와 설정을 가져오고 싶다면 parent에 원하는 빈을 적으면 된다. -->
     <bean id="testUserService" class="com.example.springbook.user.service.UserServiceTest$TestUserService" parent="userService"/>
 
-    <bean id="transactionAdvice" class="com.example.springbook.user.service.TransactionAdvice">
+    <!-- <bean id="transactionAdvice" class="com.example.springbook.user.service.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager" />
-    </bean>
+    </bean> -->
+
+    <!-- <aop:config>
+        <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
+    </aop:config>
+
+    <tx:advice id="transactionAdvice">
+        <tx:attributes>
+            <tx:method name="get*" read-only="true" />
+            <tx:method name="*" />
+        </tx:attributes>
+    </tx:advice> -->
+
+    <tx:annotation-driven />
+
+
+    <!-- <bean id="userLevelUpgradePolicy" class="com.example.springbook.user.service.UserLevelUpgradePolicyBase">
+        <property name="userDao" ref="userDao"/>
+    </bean> -->
 
     <!-- <bean id="transactionPointcut" class="com.example.springbook.learningtest.jdk.proxy.NameMatchClassMethodPointcut">
         <property name="mappedClassName" value="*ServiceImpl" />
         <property name="mappedName" value="upgrade*" />
     </bean> -->
-    <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+    <!-- <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
         <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))" />    
-    </bean>
+    </bean> -->
 
     <!-- <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
         <property name="advice" ref="transactionAdvice" />
@@ -55,9 +75,7 @@
     </bean> -->
 
     <!-- AOP 설정을 담은 부모 태그,필요에 따라 AspectJAdvisorAutoProxyCreator를 빈으로 등록해준다. -->
-    <aop:config>
-        <aop:advisor advice-ref="transactionAdvice" pointcut="execution(* *..*ServiceImpl.upgrade*(..))" />
-    </aop:config>
+
 
     <!-- <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
         <property name="target" ref="userServiceImpl"/>
@@ -70,5 +88,23 @@
     </bean> -->
 
     <!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />  -->
+     <!-- <bean id="transctionAdvice" class="org.springframework.transaction.interceptor.TransactionInterceptor">
+        <property name="transactionManager" ref="transactionManager"></property>
+        <property name="transactionAttributes">
+            <props>
+                <prop key="get*">PROPAGATION_REQUIRED, readOnly, timeout_30</prop>
+                <prop key="upgrade*">PROPAGATION_REQUIRED_NEW, IOLATION_SERIALIZABLE</prop>
+                <prop key="*">PROPAGATION_REQUIRED</prop>
+            </props>
+        </property>
+     </bean> -->
+
+     <!-- <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
+        <tx:attributes>
+            <tx:method name="get*" propagation="REQUIRED" read-only="true" timeout="30" />
+            <tx:method name="upgrade*" propagation="REQUIRES_NEW" isolation="SERIALIZABLE" />
+            <tx:method name="*" propagation="REQUIRED" />
+        </tx:attributes>
+     </tx:advice> -->
 
 </beans>

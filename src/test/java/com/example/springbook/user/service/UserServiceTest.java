@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
+import org.springframework.aop.support.AopUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.mail.MailException;
@@ -32,6 +33,8 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.dao.TransientDataAccessResourceException;
 
 import com.example.springbook.user.dao.UserDao;
 import com.example.springbook.user.domain.Level;
@@ -179,6 +182,11 @@ public class UserServiceTest {
         assertThat(testUserService, instanceOf(java.lang.reflect.Proxy.class));
     }
 
+    @Test(expected = TransientDataAccessResourceException.class)
+    public void readOnlyTransactionAttribute(){
+        testUserService.getAll();
+    }
+
     private void checkLevel(User user, Level expectedLevel){
         User userUpdate = userDao.get(user.getId());
         assertThat(userUpdate.getLevel(), is(expectedLevel));
@@ -206,8 +214,17 @@ public class UserServiceTest {
             if(user.getId().equals(id)) throw new TestUserServiceException();
             super.upgradeLevel(user);
         }
+        // @Transactional
+        public List<User> getAll(){
+            for(User user : super.getAll()) {
+                // 읽기 전용인 getAll에서 강제로 update를 발생시킨다.
+                super.update(user);
+            }
+            return null;
+        }
     }
-    
+
+
 }
 
 class TestUserServiceException extends RuntimeException{ }
