@@ -28,6 +28,12 @@
 
     <bean id="userDao" class="com.example.springbook.user.dao.UserDaoJdbc">
         <property name="dataSource" ref="dataSource"/>
+        <property name="sqlAdd" value="insert into users(id, name, password, level, login, recommend, email) values(?, ?, ?, ?, ?, ?, ?)" />
+        <property name="sqlGet" value="select * from users where id = ?" />
+        <property name="sqlDeleteAll" value="delete from users" />
+        <property name="sqlGetCount" value="select count(*) from users" />
+        <property name="sqlGetAll" value="select * from users order by id" />
+        <property name="sqlUpdate" value="update users set name = ?, password = ?, level = ?, login = ?, recommend = ?, email = ? where id = ?" />
     </bean>
 
     <bean id="userService" class="com.example.springbook.user.service.UserServiceImpl">
@@ -38,7 +44,7 @@
     
     <!-- 스태틱 멤버 클래스는 $로 지정을 해주고 다른 빈의 프로퍼티 정의와 설정을 가져오고 싶다면 parent에 원하는 빈을 적으면 된다. -->
     <bean id="testUserService" class="com.example.springbook.user.service.UserServiceTest$TestUserService" parent="userService"/>
-
+    <tx:annotation-driven />
     <!-- <bean id="transactionAdvice" class="com.example.springbook.user.service.TransactionAdvice">
         <property name="transactionManager" ref="transactionManager" />
     </bean> -->
@@ -54,7 +60,7 @@
         </tx:attributes>
     </tx:advice> -->
 
-    <tx:annotation-driven />
+
 
 
     <!-- <bean id="userLevelUpgradePolicy" class="com.example.springbook.user.service.UserLevelUpgradePolicyBase">

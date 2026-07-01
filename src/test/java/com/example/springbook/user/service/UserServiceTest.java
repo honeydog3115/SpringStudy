@@ -30,10 +30,15 @@ import org.springframework.mail.MailException;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.test.annotation.DirtiesContext;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.dao.TransientDataAccessResourceException;
 
 import com.example.springbook.user.dao.UserDao;
@@ -42,7 +47,8 @@ import com.example.springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("/test-applicationContext.xml")
-public class UserServiceTest {
+@TransactionConfiguration(defaultRollback = false)
+public class UserServiceTest implements UserServiceTestIterface{
     @Autowired
     ApplicationContext context;
 
@@ -187,6 +193,15 @@ public class UserServiceTest {
         testUserService.getAll();
     }
 
+    @Test
+    @Transactional
+    @Rollback(true)
+    public void transactionSync(){        
+        userDao.deleteAll();
+        userService.add(users.get(0));
+        userService.add(users.get(1));
+    }
+
     private void checkLevel(User user, Level expectedLevel){
         User userUpdate = userDao.get(user.getId());
         assertThat(userUpdate.getLevel(), is(expectedLevel));
@@ -223,8 +238,6 @@ public class UserServiceTest {
             return null;
         }
     }
-
-
 }
 
 class TestUserServiceException extends RuntimeException{ }
