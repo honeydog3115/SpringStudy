@@ -3,6 +3,7 @@ package com.example.springbook.user.dao;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 import javax.naming.spi.DirStateFactory.Result;
 import javax.sql.DataSource;
@@ -18,6 +19,7 @@ import java.sql.ResultSet;
 
 import com.example.springbook.user.domain.Level;
 import com.example.springbook.user.domain.User;
+import com.example.springbook.user.sqlservice.SqlService;
 
 /*
 * Class.forName("com.mysql.jdbc.Driver"); 를 사용하는 이유는
@@ -28,12 +30,7 @@ import com.example.springbook.user.domain.User;
 // Class.forName("com.mysql.jdbc.Driver");
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
-    private String sqlAdd;
-    private String sqlGet;
-    private String sqlDeleteAll;
-    private String sqlGetCount;
-    private String sqlGetAll;
-    private String sqlUpdate;
+    private SqlService sqlService;
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
             public User mapRow(ResultSet rs, int rowNum) throws SQLException{
@@ -50,27 +47,8 @@ public class UserDaoJdbc implements UserDao {
         }
     };
 
-    public void setSqlAdd(String sqlAdd) {
-        this.sqlAdd = sqlAdd;
-    }
-
-    public void setSqlGet(String sqlGet) {
-        this.sqlGet = sqlGet;
-    }
-
-    public void setSqlDeleteAll(String sqlDeleteAll) {
-        this.sqlDeleteAll = sqlDeleteAll;
-    }
-
-    public void setSqlGetCount(String sqlGetCount) {
-        this.sqlGetCount = sqlGetCount;
-    }
-
-    public void setSqlGetAll(String sqlGetAll) {
-        this.sqlGetAll = sqlGetAll;
-    }
-    public void setSqlUpdate(String sqlUpdate) {
-        this.sqlUpdate = sqlUpdate;
+    public void setSqlService(SqlService sqlService) {
+        this.sqlService = sqlService;
     }
 
     public void setDataSource(DataSource dataSource){
@@ -79,31 +57,31 @@ public class UserDaoJdbc implements UserDao {
 
     public void add(final User user){
         this.jdbcTemplate.update(
-            this.sqlAdd,
+            this.sqlService.getSql("userAdd"),
             user.getId(), user.getName(), user.getPassword(), 
             user.getLevel().intValue(), user.getLogin(), user.getRecommend(), user.getEmail());
     }
 
     public User get(String id){
-        return this.jdbcTemplate.queryForObject(this.sqlGet, 
+        return this.jdbcTemplate.queryForObject(this.sqlService.getSql("userGet"), 
         new Object[] {id}, this.userMapper);
     }
 
     public void deleteAll(){
-        this.jdbcTemplate.update(this.sqlDeleteAll);
+        this.jdbcTemplate.update(this.sqlService.getSql("userDeleteAll"));
     }
 
     public int getCount(){
-        return this.jdbcTemplate.queryForObject(this.sqlGetCount, Integer.class);
+        return this.jdbcTemplate.queryForObject(this.sqlService.getSql("userGetCount"), Integer.class);
     }   
 
     public List<User> getAll(){
-        return this.jdbcTemplate.query(this.sqlGetAll, this.userMapper);
+        return this.jdbcTemplate.query(this.sqlService.getSql("userGetAll"), this.userMapper);
     }
 
     public void update(User user){
         this.jdbcTemplate.update(
-            this.sqlUpdate, 
+            this.sqlService.getSql("userUpdate"), 
             user.getName(), user.getPassword(), user.getLevel().intValue(), user.getLogin(),
             user.getRecommend(), user.getEmail(), user.getId());
     }
