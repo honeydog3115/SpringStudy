@@ -3,13 +3,16 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:tx="http://www.springframework.org/schema/tx"
+    xmlns:context="http://www.springframework.org/schema/context"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans.xsd 
         http://www.springframework.org/schema/aop 
         http://www.springframework.org/schema/aop/spring-aop.xsd
         http://www.springframework.org/schema/tx
-        http://www.springframework.org/schema/tx/spring-tx.xsd">
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context.xsd">
     <!-- <bean id="connectionMaker" class="com.example.springbook.user.dao.DConnectionMaker"/> -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
@@ -31,17 +34,10 @@
         <property name="sqlService" ref="sqlService"/>
     </bean>
 
-    <bean id="sqlService" class="com.example.springbook.user.sqlservice.SimpleSqlService">
-        <property name="sqlMap">
-            <map>
-                <entry key="userAdd" value="insert into users(id, name, password, level, login, recommend, email) values(?, ?, ?, ?, ?, ?, ?)"/>
-                <entry key="userGet" value="select * from users where id = ?" />
-                <entry key="userDeleteAll" value="delete from users" />
-                <entry key="userGetCount" value="select count(*) from users" />
-                <entry key="userGetAll" value="select * from users order by id" />
-                <entry key="userUpdate" value="update users set name = ?, password = ?, level = ?, login = ?, recommend = ?, email = ? where id = ?" />
-            </map>
-        </property>
+    <bean id="sqlService" class="com.example.springbook.user.sqlservice.XmlSqlService">
+        <property name="sqlmapFile" value="sqlmap.xml"/>
+        <property name="sqlReader" ref="sqlService"/>
+        <property name="sqlRegistry" ref="sqlService"/>
     </bean>
 
     <bean id="userService" class="com.example.springbook.user.service.UserServiceImpl">
@@ -53,72 +49,5 @@
     <!-- 스태틱 멤버 클래스는 $로 지정을 해주고 다른 빈의 프로퍼티 정의와 설정을 가져오고 싶다면 parent에 원하는 빈을 적으면 된다. -->
     <bean id="testUserService" class="com.example.springbook.user.service.UserServiceTest$TestUserService" parent="userService"/>
     <tx:annotation-driven />
-    <!-- <bean id="transactionAdvice" class="com.example.springbook.user.service.TransactionAdvice">
-        <property name="transactionManager" ref="transactionManager" />
-    </bean> -->
-
-    <!-- <aop:config>
-        <aop:advisor advice-ref="transactionAdvice" pointcut="bean(*Service)" />
-    </aop:config>
-
-    <tx:advice id="transactionAdvice">
-        <tx:attributes>
-            <tx:method name="get*" read-only="true" />
-            <tx:method name="*" />
-        </tx:attributes>
-    </tx:advice> -->
-
-
-
-
-    <!-- <bean id="userLevelUpgradePolicy" class="com.example.springbook.user.service.UserLevelUpgradePolicyBase">
-        <property name="userDao" ref="userDao"/>
-    </bean> -->
-
-    <!-- <bean id="transactionPointcut" class="com.example.springbook.learningtest.jdk.proxy.NameMatchClassMethodPointcut">
-        <property name="mappedClassName" value="*ServiceImpl" />
-        <property name="mappedName" value="upgrade*" />
-    </bean> -->
-    <!-- <bean id="transactionPointcut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
-        <property name="expression" value="execution(* *..*ServiceImpl.upgrade*(..))" />    
-    </bean> -->
-
-    <!-- <bean id="transactionAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
-        <property name="advice" ref="transactionAdvice" />
-        <property name="pointcut" ref="transactionPointcut" />
-    </bean> -->
-
-    <!-- AOP 설정을 담은 부모 태그,필요에 따라 AspectJAdvisorAutoProxyCreator를 빈으로 등록해준다. -->
-
-
-    <!-- <bean id="userService" class="org.springframework.aop.framework.ProxyFactoryBean">
-        <property name="target" ref="userServiceImpl"/>
-        어드바이스와 어드바이저를 동시에 설정할 수 있는 프로퍼티
-        <property name="interceptorNames">
-            <list>
-                <value>transactionAdvisor</value>
-            </list>
-        </property>
-    </bean> -->
-
-    <!-- <bean class="org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator" />  -->
-     <!-- <bean id="transctionAdvice" class="org.springframework.transaction.interceptor.TransactionInterceptor">
-        <property name="transactionManager" ref="transactionManager"></property>
-        <property name="transactionAttributes">
-            <props>
-                <prop key="get*">PROPAGATION_REQUIRED, readOnly, timeout_30</prop>
-                <prop key="upgrade*">PROPAGATION_REQUIRED_NEW, IOLATION_SERIALIZABLE</prop>
-                <prop key="*">PROPAGATION_REQUIRED</prop>
-            </props>
-        </property>
-     </bean> -->
-
-     <!-- <tx:advice id="transactionAdvice" transaction-manager="transactionManager">
-        <tx:attributes>
-            <tx:method name="get*" propagation="REQUIRED" read-only="true" timeout="30" />
-            <tx:method name="upgrade*" propagation="REQUIRES_NEW" isolation="SERIALIZABLE" />
-            <tx:method name="*" propagation="REQUIRED" />
-        </tx:attributes>
-     </tx:advice> -->
-
+    <context:annotation-config />
 </beans>
