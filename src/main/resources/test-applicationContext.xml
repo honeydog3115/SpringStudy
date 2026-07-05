@@ -34,11 +34,19 @@
         <property name="sqlService" ref="sqlService"/>
     </bean>
 
-    <bean id="sqlService" class="com.example.springbook.user.sqlservice.XmlSqlService">
-        <property name="sqlmapFile" value="sqlmap.xml"/>
-        <property name="sqlReader" ref="sqlService"/>
-        <property name="sqlRegistry" ref="sqlService"/>
+    <bean id="sqlService" class="com.example.springbook.user.sqlservice.DefaultSqlService">
+        <!-- <property name="sqlReader" ref="sqlReader"/>
+        <property name="sqlRegistry" ref="sqlRegistry"/> -->
     </bean>
+
+    <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.HashmapSqlRegistry">
+
+    </bean>
+
+    <bean id="sqlReader" class="com.example.springbook.user.sqlservice.JaxbXmlSqlReader">
+        <property name="sqlmapFile" value="sqlmap.xml"/>
+    </bean>
+
 
     <bean id="userService" class="com.example.springbook.user.service.UserServiceImpl">
         <property name="userDao" ref="userDao"/>

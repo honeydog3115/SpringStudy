@@ -5,6 +5,7 @@ import com.example.springbook.user.sqlservice.jaxb.*;
 import org.junit.Test;
 
 import static org.junit.Assert.assertThat;
+import static org.hamcrest.CoreMatchers.is;
 
 import java.io.IOException;
 import java.util.List;
@@ -13,7 +14,6 @@ import jakarta.xml.bind.JAXBContext;
 import jakarta.xml.bind.JAXBException;
 import jakarta.xml.bind.Unmarshaller;
 
-import static org.hamcrest.CoreMatchers.is;
 
 public class JaxbTest {
     @Test
