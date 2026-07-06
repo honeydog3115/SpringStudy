@@ -34,9 +34,9 @@
         <property name="sqlService" ref="sqlService"/>
     </bean>
 
-    <bean id="sqlService" class="com.example.springbook.user.sqlservice.DefaultSqlService">
-        <!-- <property name="sqlReader" ref="sqlReader"/>
-        <property name="sqlRegistry" ref="sqlRegistry"/> -->
+    <bean id="sqlService" class="com.example.springbook.user.sqlservice.OxmSqlService">
+        <property name="unmarshaller" ref="unmarshaller"></property>
+        <property name="sqlmap" value="classpath:com/example/springbook/user/dao/sqlmap.xml"></property>
     </bean>
 
     <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.HashmapSqlRegistry">
@@ -45,6 +45,10 @@
 
     <bean id="sqlReader" class="com.example.springbook.user.sqlservice.JaxbXmlSqlReader">
         <property name="sqlmapFile" value="sqlmap.xml"/>
+    </bean>
+
+    <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+        <property name="contextPath" value="com.example.springbook.user.sqlservice.jaxb"/>
     </bean>
 
 

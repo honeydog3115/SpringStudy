@@ -18,6 +18,9 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import com.example.springbook.user.sqlservice.jaxb.SqlType;
 import com.example.springbook.user.sqlservice.jaxb.Sqlmap;
 
+// import jakarta.xml.bind.JAXBException;
+// import jakarta.xml.bind.Unmarshaller;
+
 import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.XmlMappingException;
 
