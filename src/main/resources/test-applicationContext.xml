@@ -36,10 +36,11 @@
 
     <bean id="sqlService" class="com.example.springbook.user.sqlservice.OxmSqlService">
         <property name="unmarshaller" ref="unmarshaller"></property>
+        <property name="sqlRegistry" ref="sqlRegistry"></property>
         <property name="sqlmap" value="classpath:com/example/springbook/user/dao/sqlmap.xml"></property>
     </bean>
 
-    <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.HashmapSqlRegistry">
+    <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.ConcurrentHashMapSqlRegistry">
 
     </bean>
 
