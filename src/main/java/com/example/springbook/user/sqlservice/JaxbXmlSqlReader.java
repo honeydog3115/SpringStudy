@@ -6,9 +6,9 @@ import com.example.springbook.user.dao.UserDao;
 import com.example.springbook.user.sqlservice.jaxb.SqlType;
 import com.example.springbook.user.sqlservice.jaxb.Sqlmap;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Unmarshaller;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 public class JaxbXmlSqlReader implements SqlReader{
     private static final String DEFAULt_SQLMAP_FILE = "sqlmap.xml";

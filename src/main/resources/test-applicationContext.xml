@@ -4,6 +4,7 @@
     xmlns:aop="http://www.springframework.org/schema/aop"
     xmlns:tx="http://www.springframework.org/schema/tx"
     xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:jdbc="http://www.springframework.org/schema/jdbc"
     xsi:schemaLocation="
         http://www.springframework.org/schema/beans 
         http://www.springframework.org/schema/beans/spring-beans.xsd 
@@ -12,7 +13,9 @@
         http://www.springframework.org/schema/tx
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/context 
-        http://www.springframework.org/schema/context/spring-context.xsd">
+        http://www.springframework.org/schema/context/spring-context.xsd
+        http://www.springframework.org/schema/jdbc
+        http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
     <!-- <bean id="connectionMaker" class="com.example.springbook.user.dao.DConnectionMaker"/> -->
     <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
         <property name="driverClass" value="com.mysql.jdbc.Driver" />
@@ -40,8 +43,8 @@
         <property name="sqlmap" value="classpath:com/example/springbook/user/dao/sqlmap.xml"></property>
     </bean>
 
-    <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.ConcurrentHashMapSqlRegistry">
-
+    <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.EmbeddedDbSqlRegistry">
+        <property name="dataSource" ref="embeddedDatabase"></property>
     </bean>
 
     <bean id="sqlReader" class="com.example.springbook.user.sqlservice.JaxbXmlSqlReader">
@@ -61,6 +64,11 @@
     
     <!-- 스태틱 멤버 클래스는 $로 지정을 해주고 다른 빈의 프로퍼티 정의와 설정을 가져오고 싶다면 parent에 원하는 빈을 적으면 된다. -->
     <bean id="testUserService" class="com.example.springbook.user.service.UserServiceTest$TestUserService" parent="userService"/>
+    
+    <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
+        <jdbc:script location="classpath:com/example/springbook/user/sqlservice/schema.sql"/>
+    </jdbc:embedded-database>
+
     <tx:annotation-driven />
     <context:annotation-config />
 </beans>
