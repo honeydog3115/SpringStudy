@@ -1,20 +1,16 @@
 package com.example.springbook.user.dao;
 
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.Map;
 
-import javax.naming.spi.DirStateFactory.Result;
 import javax.sql.DataSource;
 
-import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.PreparedStatementCreator;
-import org.springframework.jdbc.core.ResultSetExtractor;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import com.example.springbook.user.domain.Level;
@@ -28,8 +24,11 @@ import com.example.springbook.user.sqlservice.SqlService;
 * 하지만 최근에는 위 코드 없이도 등록이 가능함.
 */
 // Class.forName("com.mysql.jdbc.Driver");
+@Repository
 public class UserDaoJdbc implements UserDao {
     private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private SqlService sqlService;
 
     private RowMapper<User> userMapper = new RowMapper<User>() {
@@ -47,10 +46,11 @@ public class UserDaoJdbc implements UserDao {
         }
     };
 
-    public void setSqlService(SqlService sqlService) {
-        this.sqlService = sqlService;
-    }
+    // public void setSqlService(SqlService sqlService) {
+    //     this.sqlService = sqlService;
+    // }
 
+    @Autowired
     public void setDataSource(DataSource dataSource){
         this.jdbcTemplate = new JdbcTemplate(dataSource);
     }

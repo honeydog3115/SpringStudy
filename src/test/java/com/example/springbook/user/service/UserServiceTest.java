@@ -41,13 +41,14 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.DefaultTransactionDefinition;
 import org.springframework.dao.TransientDataAccessResourceException;
 
-import com.example.springbook.TestApplicationContext;
+import com.example.springbook.AppContext;
+import com.example.springbook.TestAppContext;
 import com.example.springbook.user.dao.UserDao;
 import com.example.springbook.user.domain.Level;
 import com.example.springbook.user.domain.User;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = TestApplicationContext.class)
+@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
 @TransactionConfiguration(defaultRollback = false)
 public class UserServiceTest implements UserServiceTestIterface{
     @Autowired
@@ -223,7 +224,7 @@ public class UserServiceTest implements UserServiceTestIterface{
         assertThat(updated.getLevel(), is(expectedLevel));
     }
 
-    static class TestUserService extends UserServiceImpl {
+    public static class TestUserService extends UserServiceImpl {
         private String id = "madnit1";
         
         protected void upgradeLevel(User user){

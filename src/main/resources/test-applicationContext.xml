@@ -17,58 +17,5 @@
         http://www.springframework.org/schema/jdbc
         http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
     <!-- <bean id="connectionMaker" class="com.example.springbook.user.dao.DConnectionMaker"/> -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
-        <property name="driverClass" value="com.mysql.jdbc.Driver" />
-        <property name="url" value="jdbc:mysql://localhost/testdb" />
-        <property name="username" value="spring" />
-        <property name="password" value="book" />
-    </bean>
 
-    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="dataSource"/>
-    </bean>
-
-    <bean id="mailSender" class="com.example.springbook.user.service.DummyMailSender">
-        <!-- <property name="host" value="mail.server.com"/> -->
-    </bean>
-
-    <bean id="userDao" class="com.example.springbook.user.dao.UserDaoJdbc">
-        <property name="dataSource" ref="dataSource"/>
-        <property name="sqlService" ref="sqlService"/>
-    </bean>
-
-    <bean id="sqlService" class="com.example.springbook.user.sqlservice.OxmSqlService">
-        <property name="unmarshaller" ref="unmarshaller"></property>
-        <property name="sqlRegistry" ref="sqlRegistry"></property>
-        <property name="sqlmap" value="classpath:com/example/springbook/user/dao/sqlmap.xml"></property>
-    </bean>
-
-    <bean id="sqlRegistry" class="com.example.springbook.user.sqlservice.EmbeddedDbSqlRegistry">
-        <property name="dataSource" ref="embeddedDatabase"></property>
-    </bean>
-
-    <bean id="sqlReader" class="com.example.springbook.user.sqlservice.JaxbXmlSqlReader">
-        <property name="sqlmapFile" value="sqlmap.xml"/>
-    </bean>
-
-    <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-        <property name="contextPath" value="com.example.springbook.user.sqlservice.jaxb"/>
-    </bean>
-
-
-    <bean id="userService" class="com.example.springbook.user.service.UserServiceImpl">
-        <property name="userDao" ref="userDao"/>
-        <property name="mailSender" ref="mailSender"/>
-        <!-- <property name="userLevelUpgradePolicy" ref="userLevelUpgradePolicy"/> -->
-    </bean>
-    
-    <!-- 스태틱 멤버 클래스는 $로 지정을 해주고 다른 빈의 프로퍼티 정의와 설정을 가져오고 싶다면 parent에 원하는 빈을 적으면 된다. -->
-    <bean id="testUserService" class="com.example.springbook.user.service.UserServiceTest$TestUserService" parent="userService"/>
-    
-    <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
-        <jdbc:script location="classpath:com/example/springbook/user/sqlservice/schema.sql"/>
-    </jdbc:embedded-database>
-
-    <tx:annotation-driven />
-    <context:annotation-config />
 </beans>

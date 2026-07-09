@@ -4,11 +4,13 @@ import java.sql.Connection;
 import javax.sql.DataSource;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.mail.MailSender;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,13 +22,16 @@ import com.example.springbook.user.domain.Level;
 import com.example.springbook.user.domain.User;
 
 // @Transactional
+@Service("userService")
 public class UserServiceImpl implements UserService {
     public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
     public static final int MIN_RECOMMEND_FOR_GOLD = 30;
 
+    @Autowired
     UserDao userDao;
-    DataSource dataSource;
+    @Autowired
     MailSender mailSender;
+    DataSource dataSource;
 
     // UserLevelUpgradePolicy userLevelUpgradePolicy;
     
