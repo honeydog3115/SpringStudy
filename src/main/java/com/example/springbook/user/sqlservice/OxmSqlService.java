@@ -27,7 +27,7 @@ public class OxmSqlService implements SqlService{
     }
 
     public void setSqlmap(Resource sqlmap){
-        this.oxmSqlReader.setSqlmap(this.sqlmap);
+        this.oxmSqlReader.setSqlmap(sqlmap);
     }
     
     @PostConstruct
@@ -45,7 +45,7 @@ public class OxmSqlService implements SqlService{
     private class OxmSqlReader implements SqlReader{
         private Unmarshaller unmarshaller;
         private final static String DEFAULT_SQLMAP_FILE = "sqlmap.xml";
-        private Resource sqlmap = new ClassPathResource("sqlmap.xml", UserDao.class);
+        private Resource sqlmap;
 
 
         public void setUnmarshaller(Unmarshaller unmarshaller) {

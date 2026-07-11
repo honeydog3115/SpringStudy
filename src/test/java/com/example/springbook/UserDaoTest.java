@@ -6,17 +6,17 @@ import java.util.List;
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 import org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator;
 import org.springframework.jdbc.support.SQLExceptionTranslator;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.example.springbook.user.dao.UserDao;
-import com.example.springbook.user.dao.UserDaoJdbc;
 import com.example.springbook.user.domain.Level;
 import com.example.springbook.user.domain.User;
 
@@ -25,11 +25,11 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
 import static org.hamcrest.Matchers.instanceOf;
-import org.junit.runner.JUnitCore;
 import org.junit.runner.RunWith;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(classes = {AppContext.class, TestAppContext.class})
+@ContextConfiguration(classes = AppContext.class)
+@ActiveProfiles("test")
 public class UserDaoTest {
     @Autowired
     private UserDao dao;
@@ -39,6 +39,9 @@ public class UserDaoTest {
     private User user1;
     private User user2;
     private User user3;
+
+    @Autowired
+    DefaultListableBeanFactory bf;
 
     @Before
     public void setup(){
@@ -160,6 +163,13 @@ public class UserDaoTest {
         checkSameUser(user1, user1update);
         User user2same = dao.get(user2.getId());
         checkSameUser(user2, user2same);
+    }
+
+    @Test
+    public void beans(){
+        for(String n : bf.getBeanDefinitionNames()){
+            System.out.println(n + "\t" + bf.getBean(n).getClass().getName());
+        }
     }
 
     private void checkSameUser(User user1, User user2){
